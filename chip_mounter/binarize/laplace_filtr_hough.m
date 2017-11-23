@@ -1,4 +1,4 @@
-function binarize
+function laplace_filtr_hough
 clear;
 close;
 
@@ -9,19 +9,29 @@ G = double(img(:,:,2));
 B = double(img(:,:,3));
 g = (R+G+B)/3;
 
-bw = ones(size(g));
-bw(g>254) = 0;
+g = lap_filter(g);
 
-[m,n] = size(bw);
-out = zeros(size(bw));
-for y=2:n-1
-   for x=2:m-1
-       W = bw(x-1:x+1,y-1:y+1);
-       Wsort = sort(W(:));
-       mid = Wsort(5); %median filter
-       out(x,y)=mid;
-   end
-end
+bw = zeros(size(g));
+bw(g>10) = 1;
+
+imagesc(bw);
+colormap(gray);
+axis image;
+axis off;
+
+saveas(gcf,'bw_lap.png')
+
+
+% [m,n] = size(bw);
+% out = zeros(size(bw));
+% for y=2:n-1
+%    for x=2:m-1
+%        W = bw(x-1:x+1,y-1:y+1);
+%        Wsort = sort(W(:));
+%        mid = Wsort(5); %median filter
+%        out(x,y)=mid;
+%    end
+% end
 
 
 % bw(bw==1)=0;
@@ -33,10 +43,10 @@ end
 % axis image;
 
 % subplot(122);
-imagesc(out);
-colormap(gray);
-axis image;
-axis off;
+% imagesc(out);
+% colormap(gray);
+% axis image;
+% axis off;
 
 % subplot(121);
 % g8 = sobel(g);
@@ -54,7 +64,6 @@ axis off;
 % colormap(gray);
 % title('laplacian filter (absolute)');
 % 
-saveas(gcf,'bw.png')
 
 % imsave(gcf,'result.png');
 % g8 = uint8(g);
